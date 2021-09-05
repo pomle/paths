@@ -1,4 +1,4 @@
-import { createCodec } from 'codec';
+import { createCodec } from './codec';
 
 export const string = createCodec(encodeURIComponent, decodeURIComponent);
 
