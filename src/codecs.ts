@@ -9,5 +9,5 @@ export const number = createCodec(
 
 export const boolean = createCodec(
   (value: boolean) => (value ? '1' : '0'),
-  (text: string) => (text === '1' ? true : false),
+  (text: string) => text === '1',
 );
