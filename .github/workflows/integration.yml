@@ -1,0 +1,27 @@
+name: Integration
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v2
+
+      - name: Install
+        run: yarn install
+
+      - name: Test
+        run: yarn run test
+
+      - name: Build
+        run: yarn run build
+
+      - name: Predeploy
+        run: yarn run predeploy
