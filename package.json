@@ -1,12 +1,12 @@
 {
-  "name": "",
+  "name": "@pomle/paths",
   "version": "0.0.0-0",
-  "description": "",
+  "description": "A JavaScript library for handling web app paths",
   "author": "",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/"
+    "url": "git+https://github.com/pomle/paths"
   },
   "keywords": [],
   "main": "dist/index.js",

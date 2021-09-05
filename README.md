@@ -1,11 +1,11 @@
-# NPM Package
+# Paths
 
-Description
+A JS lib for handling web app paths.
 
 ## Usage
 
-### * Install.
+### \* Install.
 
 ```bash
-yarn add
+yarn add @pomle/paths
 ```
