@@ -35,13 +35,22 @@ export function createPath<PathCodecType extends PathCodec>(
   pathName: string,
   codec: PathCodecType,
 ): Path<PathCodecType> {
+  const keys = Object.keys(codec);
+
+  for (const key of keys) {
+    const placeholder = `:${key}`;
+    if (!pathName.includes(placeholder)) {
+      throw new Error(`Param ${placeholder} not in path name`);
+    }
+  }
+
   return {
     path: pathName,
     codec,
 
     encode(params) {
       const encoded: any = {};
-      for (const key of Object.keys(params)) {
+      for (const key of keys) {
         encoded[key] = codec[key].encode(params[key]);
       }
       return encoded;
@@ -49,7 +58,7 @@ export function createPath<PathCodecType extends PathCodec>(
 
     decode(params) {
       const decoded: any = {};
-      for (const key of Object.keys(params)) {
+      for (const key of keys) {
         decoded[key] = codec[key].decode(params[key]);
       }
       return decoded;
