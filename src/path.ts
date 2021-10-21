@@ -12,7 +12,7 @@ type Params<Source extends {}> = {
 };
 
 type InputParams<CodecType extends PathCodec> = {
-  [Prop in keyof CodecType]: Parameters<CodecType[Prop]['decode']>[0];
+  [Prop in keyof CodecType]: Parameters<CodecType[Prop]['encode']>[0];
 };
 
 type OutputParams<CodecType extends PathCodec> = {
