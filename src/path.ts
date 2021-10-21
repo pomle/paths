@@ -3,38 +3,36 @@ export type ParamCodec<SourceType> = {
   decode: (param: string) => SourceType;
 };
 
-export type PathCodec = {
-  [key: string]: ParamCodec<any>;
-};
+export type PathCodec = Record<string, ParamCodec<any>>;
 
-type Params<Source extends {}> = {
+type Params<Source extends Record<string, unknown>> = {
   [key in keyof Source]: string;
 };
 
-type InputParams<CodecType extends PathCodec> = {
-  [Prop in keyof CodecType]: Parameters<CodecType[Prop]['encode']>[0];
+type InputParams<Codec extends PathCodec> = {
+  [key in keyof Codec]: Parameters<Codec[key]['encode']>[0];
 };
 
-type OutputParams<CodecType extends PathCodec> = {
-  [Prop in keyof CodecType]: ReturnType<CodecType[Prop]['decode']>;
+type OutputParams<Codec extends PathCodec> = {
+  [key in keyof Codec]: ReturnType<Codec[key]['decode']>;
 };
 
-export interface Path<PathCodecType extends PathCodec> {
+export interface Path<Codec extends PathCodec> {
   path: string;
-  codec: PathCodecType;
-  url(params: InputParams<PathCodecType>): string;
-  encode(params: InputParams<PathCodecType>): Params<PathCodecType>;
-  decode(params: Params<PathCodecType>): OutputParams<PathCodecType>;
-  append<AdditionalPathCodecType extends PathCodec>(
+  codec: Codec;
+  url(params: InputParams<Codec>): string;
+  encode(params: InputParams<Codec>): Params<Codec>;
+  decode(params: Params<Codec>): OutputParams<Codec>;
+  append<AdditionalCodec extends PathCodec>(
     pathName: string,
-    codec: AdditionalPathCodecType,
-  ): Path<PathCodecType & AdditionalPathCodecType>;
+    codec: AdditionalCodec,
+  ): Path<Codec & AdditionalCodec>;
 }
 
-export function createPath<PathCodecType extends PathCodec>(
+export function createPath<Codec extends PathCodec>(
   pathName: string,
-  codec: PathCodecType,
-): Path<PathCodecType> {
+  codec: Codec,
+): Path<Codec> {
   const keys = Object.keys(codec);
 
   for (const key of keys) {
@@ -71,9 +69,9 @@ export function createPath<PathCodecType extends PathCodec>(
       }, pathName);
     },
 
-    append<AdditionalPathCodecType extends PathCodec>(
+    append<AdditionalCodec extends PathCodec>(
       pathName: string,
-      addCodec: AdditionalPathCodecType,
+      addCodec: AdditionalCodec,
     ) {
       return createPath(this.path + pathName, { ...codec, ...addCodec });
     },
