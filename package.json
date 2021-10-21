@@ -1,6 +1,6 @@
 {
   "name": "@pomle/paths",
-  "version": "1.0.1-0",
+  "version": "1.0.1",
   "description": "A JavaScript library for handling web app paths",
   "author": "",
   "license": "MIT",
