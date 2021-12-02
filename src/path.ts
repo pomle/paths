@@ -46,7 +46,7 @@ export function createPath<Codec extends PathCodec>(
     encode(params) {
       const encoded: any = {};
       for (const key of keys) {
-        encoded[key] = codec[key].encode(params[key]);
+        encoded[key] = encodeURIComponent(codec[key].encode(params[key]));
       }
       return encoded;
     },
@@ -54,7 +54,7 @@ export function createPath<Codec extends PathCodec>(
     decode(params) {
       const decoded: any = {};
       for (const key of keys) {
-        decoded[key] = codec[key].decode(params[key]);
+        decoded[key] = codec[key].decode(decodeURIComponent(params[key]));
       }
       return decoded;
     },

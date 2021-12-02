@@ -1,10 +1,13 @@
 import { createCodec } from './codec';
 
-export const string = createCodec(encodeURIComponent, decodeURIComponent);
+export const string = createCodec(
+  (value: string) => value,
+  (text: string) => text,
+);
 
 export const number = createCodec(
-  (value: number) => encodeURIComponent(value.toString()),
-  (text: string) => parseFloat(decodeURIComponent(text)),
+  (value: number) => value.toString(),
+  (text: string) => parseFloat(text),
 );
 
 export const boolean = createCodec(
