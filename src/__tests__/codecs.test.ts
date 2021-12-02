@@ -3,8 +3,7 @@ import * as codecs from '../codecs';
 describe('Codecs', () => {
   describe('string codec', () => {
     const plain = 'a string with "some"/"a few" non url-safe characters';
-    const encoded =
-      'a%20string%20with%20%22some%22%2F%22a%20few%22%20non%20url-safe%20characters';
+    const encoded = 'a string with "some"/"a few" non url-safe characters';
 
     it('encodes', () => {
       const result = codecs.string.encode(plain);
