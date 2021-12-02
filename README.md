@@ -49,7 +49,7 @@ const values = paths.userPost.decode({
 console.log(values); // Prints {userId: "pomle", postId: 24}
 ```
 
-Create custom codecs
+Create custom codecs. Do not encode and decode with `encodeURIComponent` or `decodeURIComponent` manually. It will be handled by the library.
 
 ```ts
 import { createPath, createCodec } from '@pomle/paths';
@@ -57,10 +57,10 @@ import { DateTime } from 'luxon';
 
 const dateCodec = createCodec<DateTime>(
   (date) => {
-    return encodeURIComponent(date.toISO());
+    return date.toISO();
   },
   (text: string) => {
-    return DateTime.fromISO(decodeURIComponent(text));
+    return DateTime.fromISO(text);
   },
 );
 
