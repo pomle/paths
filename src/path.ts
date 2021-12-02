@@ -1,9 +1,6 @@
-export type ParamCodec<SourceType> = {
-  encode: (source: SourceType) => string;
-  decode: (param: string) => SourceType;
-};
+import { Codec } from './codec';
 
-export type PathCodec = Record<string, ParamCodec<any>>;
+export type PathCodec = Record<string, Codec<any>>;
 
 type Params<Source extends Record<string, unknown>> = {
   [key in keyof Source]: string;
