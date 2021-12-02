@@ -23,7 +23,7 @@ describe('#createQuery', () => {
       );
     });
 
-    it.skip('creates typed params from URL', () => {
+    it('creates typed params from URL', () => {
       expect(
         query.parse(
           'text=fo+o&number=2&boolean=0&many_numbers=1&many_numbers=2&many_numbers=3',
