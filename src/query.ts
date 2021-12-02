@@ -25,7 +25,12 @@ export type Values<Codec extends QueryCodec> = {
   [key in keyof Codec]: ReturnType<Codec[key]['decode']>[];
 };
 
-export function createQuery<T extends QueryCodec>(codecs: T) {
+export interface Query<Codec extends QueryCodec> {
+  parse(search: string): Values<Codec>;
+  build(source: Values<Codec>): string;
+}
+
+export function createQuery<T extends QueryCodec>(codecs: T): Query<T> {
   const keys = Object.keys(codecs);
 
   return {
