@@ -4,6 +4,8 @@ A TS lib for handling type rich URLs in web apps.
 
 ## Usage
 
+### Paths
+
 Define paths
 
 ```ts
@@ -36,7 +38,7 @@ const url = paths.userPost.url({
 console.log(url); // Prints "/user/pomle/posts/24"
 ```
 
-Parse params from URLs
+Parse path params from URLs
 
 ```ts
 import { paths } from './paths';
@@ -47,6 +49,61 @@ const values = paths.userPost.decode({
 });
 
 console.log(values); // Prints {userId: "pomle", postId: 24}
+```
+
+### Query
+
+Define query params
+
+```ts
+import { createQuery, codecs } from '@pomle/paths';
+
+const searchFilter = createQuery({
+  username: codecs.string,
+  range: codecs.number,
+});
+```
+
+Parse query string from URL
+
+```ts
+// Location ?username=Pontus+Alexander&range=3&range=5
+
+const values = searchFilter.parse(window.location.search);
+
+console.log(values);
+/* 
+{
+  username: ["Pontus Alexander"],
+  range: [3, 5]
+}
+*/
+```
+
+Update query string
+
+```ts
+// Location ?username=Pontus+Alexander&range=3&range=5
+
+const qs = searchFilter.build({
+  username: ['Pontus Alexander'],
+  range: [3, 5],
+});
+
+console.log(qs);
+// ?username=Pontus+Alexander&range=3&range=5
+```
+
+### Codecs
+
+There are 3 codecs bundled
+
+```ts
+import { createQuery, codecs } from '@pomle/paths';
+
+codecs.boolean; // Encodes true and false as 1 and 0
+codecs.string; // Encodes strings safely for URLs
+codecs.number; // Encodes numbers safely for URLs
 ```
 
 Create custom codecs. Do not encode and decode with `encodeURIComponent` or `decodeURIComponent` manually. It will be handled by the library.
