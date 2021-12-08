@@ -43,6 +43,16 @@ Parse path params from URLs
 ```ts
 import { paths } from './paths';
 
+const values = paths.userPost.parse('/user/pomle/posts/24');
+
+console.log(values); // Prints {userId: "pomle", postId: 24}
+```
+
+Decode params already parsed
+
+```ts
+import { paths } from './paths';
+
 const values = paths.userPost.decode({
   userId: 'pomle',
   postId: '24',
