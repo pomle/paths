@@ -30,7 +30,7 @@ Create URLs
 ```ts
 import { paths } from './paths';
 
-const url = paths.userPost.url({
+const url = paths.userPost.build({
   userId: 'pomle',
   postId: 24,
 });

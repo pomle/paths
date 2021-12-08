@@ -47,6 +47,7 @@ export interface Path<Codec extends PathCodec> {
   path: string;
   codec: Codec;
   url(params: InputParams<Codec>): string;
+  build(params: InputParams<Codec>): string;
   parse(path: string): OutputParams<Codec>;
   encode(params: InputParams<Codec>): Params<Codec>;
   decode(params: Params<Codec>): OutputParams<Codec>;
@@ -89,11 +90,15 @@ export function createPath<Codec extends PathCodec>(
       return this.decode(params);
     },
 
-    url(params) {
+    build(params) {
       const encoded = this.encode(params);
       return Object.entries(encoded).reduce((pathName, [key, value]) => {
         return pathName.replace(':' + key, value);
       }, pathName);
+    },
+
+    url(params) {
+      return this.build(params);
     },
 
     append<AdditionalCodec extends PathCodec>(
