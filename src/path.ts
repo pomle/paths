@@ -14,10 +14,40 @@ type OutputParams<Codec extends PathCodec> = {
   [key in keyof Codec]: ReturnType<Codec[key]['decode']>;
 };
 
+function createParser<Key extends string | number | symbol>(
+  pathName: string,
+  keys: Key[],
+) {
+  const components = pathName.split('/');
+  const positions = {} as Record<Key, number>;
+
+  for (const key of keys) {
+    const placeholder = `:${key}`;
+
+    const pos = components.indexOf(placeholder);
+    if (pos === -1) {
+      throw new Error(`Param ${placeholder} not in path name`);
+    }
+
+    positions[key] = pos;
+  }
+
+  return function parsePath(pathName: string) {
+    const components = pathName.split('/');
+    const values = {} as Record<Key, string>;
+    for (const key of keys) {
+      const index = positions[key];
+      values[key] = components[index];
+    }
+    return values;
+  };
+}
+
 export interface Path<Codec extends PathCodec> {
   path: string;
   codec: Codec;
   url(params: InputParams<Codec>): string;
+  parse(path: string): OutputParams<Codec>;
   encode(params: InputParams<Codec>): Params<Codec>;
   decode(params: Params<Codec>): OutputParams<Codec>;
   append<AdditionalCodec extends PathCodec>(
@@ -32,12 +62,7 @@ export function createPath<Codec extends PathCodec>(
 ): Path<Codec> {
   const keys = Object.keys(codec);
 
-  for (const key of keys) {
-    const placeholder = `:${key}`;
-    if (!pathName.includes(placeholder)) {
-      throw new Error(`Param ${placeholder} not in path name`);
-    }
-  }
+  const parsePath = createParser<keyof Codec>(pathName, keys);
 
   return {
     path: pathName,
@@ -57,6 +82,11 @@ export function createPath<Codec extends PathCodec>(
         decoded[key] = codec[key].decode(decodeURIComponent(params[key]));
       }
       return decoded;
+    },
+
+    parse(path) {
+      const params = parsePath(path);
+      return this.decode(params);
     },
 
     url(params) {
