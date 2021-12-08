@@ -11,7 +11,11 @@ describe('#createPath', () => {
       boolean: codec.boolean,
     });
 
-    it('encodes URL from params', () => {
+    it('builds path from params', () => {
+      expect(path.build(params)).toEqual('/text/fo%20o/2/0');
+    });
+
+    it('provides URL alias', () => {
       expect(path.url(params)).toEqual('/text/fo%20o/2/0');
     });
 
