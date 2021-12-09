@@ -1,6 +1,6 @@
 # Paths
 
-A TS lib for handling type rich URLs in web apps.
+A JavaScript and TypeScript lib for handling type rich URLs in web apps.
 
 ## Usage
 
