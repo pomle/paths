@@ -139,3 +139,29 @@ const url = bookings.url({
   dayOfArrival: DateTime.now(),
 });
 ```
+
+## Codec Tips!
+
+Mapping string union and params via codec.
+
+```ts
+import { createCodec } from "@pomle/paths";
+
+function oneOf<T extends unknown>(values: T[]) {
+  return function ensureOneOf(value: unknown): T {
+    if (!values.includes(value as T)) {
+      throw new Error(`Value not one of ${values.join(", ")}`);
+    }
+    return value as T;
+  };
+}
+
+type DoorState = "open" | "closed";
+
+const DOOR_STATES: DoorState[] = ["open", "closed"];
+
+const sideCodec = createCodec<DoorState>(
+    (source: DoorState) => source.toString(),
+    oneOf(DOOR_STATES));
+```
+  
