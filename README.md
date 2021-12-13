@@ -142,26 +142,49 @@ const url = bookings.url({
 
 ## Codec Tips!
 
-Mapping string union and params via codec.
+Mapping string union or enums to params via codec.
 
 ```ts
-import { createCodec } from "@pomle/paths";
+import { createCodec } from '@pomle/paths';
 
 function oneOf<T extends unknown>(values: T[]) {
   return function ensureOneOf(value: unknown): T {
     if (!values.includes(value as T)) {
-      throw new Error(`Value not one of ${values.join(", ")}`);
+      throw new Error(`Value not one of ${values.join(', ')}`);
     }
     return value as T;
   };
 }
 
-type DoorState = "open" | "closed";
+type DoorState = 'open' | 'closed';
+const DOOR_STATES: DoorState[] = ['open', 'closed'];
 
-const DOOR_STATES: DoorState[] = ["open", "closed"];
+// String unions and URL values are always strings - no conversion of value needed.
+const doorCodec = createCodec<DoorState>(
+  (source: DoorState) => source.toString(),
+  oneOf(DOOR_STATES),
+);
 
-const sideCodec = createCodec<DoorState>(
-    (source: DoorState) => source.toString(),
-    oneOf(DOOR_STATES));
+enum MessageStatus {
+  Sent,
+  Received,
+  Read,
+}
+
+const MESSAGE_STATUSES = [
+  MessageStatus.Sent,
+  MessageStatus.Received,
+  MessageStatus.Read,
+];
+
+const ensureMessageStatus = oneOf(MESSAGE_STATUSES);
+
+// Enums are numbers by default - convert URL value to number and then check.
+const messageStatusCodec = createCodec<MessageStatus>(
+  (source: MessageStatus) => source.toString(),
+  (source: string) => {
+    const number = parseFloat(source);
+    return ensureMessageStatus(number);
+  },
+);
 ```
-  
