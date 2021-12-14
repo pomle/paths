@@ -142,11 +142,8 @@ const url = bookings.url({
 
 ## Codec Tips!
 
-Mapping string union or enums to params via codec.
-
+Create a one-of-guard to ensure a value is in a set of acceptable values.
 ```ts
-import { createCodec } from '@pomle/paths';
-
 function oneOf<T extends unknown>(values: T[]) {
   return function ensureOneOf(value: unknown): T {
     if (!values.includes(value as T)) {
@@ -155,6 +152,12 @@ function oneOf<T extends unknown>(values: T[]) {
     return value as T;
   };
 }
+```
+
+Mapping string union to params via codec.
+```ts
+import { createCodec } from '@pomle/paths';
+import { oneOf } from "./one-of";
 
 type DoorState = 'open' | 'closed';
 const DOOR_STATES: DoorState[] = ['open', 'closed'];
@@ -164,6 +167,12 @@ const doorCodec = createCodec<DoorState>(
   (source: DoorState) => source.toString(),
   oneOf(DOOR_STATES),
 );
+```
+
+Mapping string union or enums to params via codec.
+```ts
+import { createCodec } from '@pomle/paths';
+import { oneOf } from "./one-of";
 
 enum MessageStatus {
   Sent,
