@@ -67,5 +67,14 @@ describe('#createQuery', () => {
         ),
       ).toEqual(values);
     });
+
+    it('provides keys for missing params', () => {
+      expect(query.parse('text=fo+o&number=2&boolean=0')).toEqual({
+        text: ['fo o'],
+        number: [2],
+        boolean: [false],
+        many_numbers: [],
+      });
+    });
   });
 });
