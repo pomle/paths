@@ -39,31 +39,36 @@ export interface Query<Codec extends QueryCodec> {
 export function createQuery<T extends QueryCodec>(codecs: T): Query<T> {
   const keys = Object.keys(codecs);
 
+  function encode(values: Values<T>) {
+    const params: Record<string, string[]> = {};
+    for (const key of keys) {
+      params[key] = values[key].map(codecs[key].encode);
+    }
+    return params as Params<T>;
+  }
+
+  function decode(params: Params<T>) {
+    const values: Record<string, unknown[]> = {};
+    for (const key of keys) {
+      values[key] = params[key].map(codecs[key].decode);
+    }
+    return values as Values<T>;
+  }
+
+  function parse(search: string) {
+    const params = parseSearch(keys, search) as Params<T>;
+    return decode(params);
+  }
+
+  function build(source: Values<T>) {
+    const params = encode(source);
+    return buildSearch(params);
+  }
+
   return {
-    encode(values: Values<T>) {
-      const params: Record<string, string[]> = {};
-      for (const key of keys) {
-        params[key] = values[key].map(codecs[key].encode);
-      }
-      return params as Params<T>;
-    },
-
-    decode(params: Params<T>) {
-      const values: Record<string, unknown[]> = {};
-      for (const key of keys) {
-        values[key] = params[key].map(codecs[key].decode);
-      }
-      return values as Values<T>;
-    },
-
-    parse(search: string) {
-      const params = parseSearch(keys, search) as Params<T>;
-      return this.decode(params);
-    },
-
-    build(source: Values<T>) {
-      const params = this.encode(source);
-      return buildSearch(params);
-    },
+    encode,
+    decode,
+    parse,
+    build,
   };
 }
