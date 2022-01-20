@@ -1,15 +1,15 @@
 import { Codec } from './codec';
 
-function parseSearch(keys: string[], search: string) {
+export function parseQuery(search: string) {
   const params = new URLSearchParams(search);
   const data: Record<string, string[]> = {};
-  for (const key of keys) {
+  for (const key of params.keys()) {
     data[key] = params.getAll(key);
   }
   return data;
 }
 
-function buildSearch(data: Record<string, string[]>) {
+export function buildQuery(data: Record<string, string[]>) {
   const params = new URLSearchParams();
   for (const key of Object.keys(data)) {
     for (const value of data[key]) {
@@ -56,13 +56,13 @@ export function createQuery<T extends QueryCodec>(codecs: T): Query<T> {
   }
 
   function parse(search: string) {
-    const params = parseSearch(keys, search) as Params<T>;
+    const params = parseQuery(search) as Params<T>;
     return decode(params);
   }
 
   function build(source: Values<T>) {
     const params = encode(source);
-    return buildSearch(params);
+    return buildQuery(params);
   }
 
   return {
