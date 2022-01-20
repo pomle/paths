@@ -56,8 +56,13 @@ export function createQuery<T extends QueryCodec>(codecs: T): Query<T> {
   }
 
   function parse(search: string) {
-    const params = parseQuery(search) as Params<T>;
-    return decode(params);
+    const params = parseQuery(search);
+    for (const key of keys) {
+      if (!params[key]) {
+        params[key] = [];
+      }
+    }
+    return decode(params as Params<T>);
   }
 
   function build(source: Values<T>) {
