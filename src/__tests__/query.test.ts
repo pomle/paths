@@ -1,5 +1,27 @@
-import { createQuery } from '../query';
+import { buildQuery, createQuery, parseQuery } from '../query';
 import * as codec from '../codecs';
+
+describe('#buildQuery', () => {
+  it('builds a query string from object', () => {
+    const text = buildQuery({
+      a: ['1'],
+      b: ['2', '4'],
+    });
+
+    expect(text).toEqual('a=1&b=2&b=4');
+  });
+});
+
+describe('#parseQuery', () => {
+  it('parses a query string to object', () => {
+    const value = parseQuery('a=1&b=2&b=4');
+
+    expect(value).toEqual({
+      a: ['1'],
+      b: ['2', '4'],
+    });
+  });
+});
 
 describe('#createQuery', () => {
   describe('#query', () => {
