@@ -65,47 +65,49 @@ export function createPath<Codec extends PathCodec>(
 
   const parsePath = createParser<keyof Codec>(pathName, keys);
 
+  function encode(params: InputParams<Codec>) {
+    const encoded: Record<string, string> = {};
+    for (const key of keys) {
+      encoded[key] = encodeURIComponent(codec[key].encode(params[key]));
+    }
+    return encoded as Params<Codec>;
+  }
+
+  function decode(params: Params<Codec>) {
+    const decoded: Record<string, unknown> = {};
+    for (const key of keys) {
+      decoded[key] = codec[key].decode(decodeURIComponent(params[key]));
+    }
+    return decoded as OutputParams<Codec>;
+  }
+
+  function parse(path: string) {
+    const params = parsePath(path);
+    return decode(params);
+  }
+
+  function build(params: Params<Codec>) {
+    const encoded = encode(params);
+    return Object.entries(encoded).reduce((pathName, [key, value]) => {
+      return pathName.replace(':' + key, value);
+    }, pathName);
+  }
+
+  function append<AdditionalCodec extends PathCodec>(
+    appendixPathName: string,
+    addCodec: AdditionalCodec,
+  ) {
+    return createPath(pathName + appendixPathName, { ...codec, ...addCodec });
+  }
+
   return {
     path: pathName,
     codec,
-
-    encode(params) {
-      const encoded: any = {};
-      for (const key of keys) {
-        encoded[key] = encodeURIComponent(codec[key].encode(params[key]));
-      }
-      return encoded;
-    },
-
-    decode(params) {
-      const decoded: any = {};
-      for (const key of keys) {
-        decoded[key] = codec[key].decode(decodeURIComponent(params[key]));
-      }
-      return decoded;
-    },
-
-    parse(path) {
-      const params = parsePath(path);
-      return this.decode(params);
-    },
-
-    build(params) {
-      const encoded = this.encode(params);
-      return Object.entries(encoded).reduce((pathName, [key, value]) => {
-        return pathName.replace(':' + key, value);
-      }, pathName);
-    },
-
-    url(params) {
-      return this.build(params);
-    },
-
-    append<AdditionalCodec extends PathCodec>(
-      pathName: string,
-      addCodec: AdditionalCodec,
-    ) {
-      return createPath(this.path + pathName, { ...codec, ...addCodec });
-    },
+    encode,
+    decode,
+    parse,
+    build,
+    url: build,
+    append,
   };
 }
