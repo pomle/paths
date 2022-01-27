@@ -76,5 +76,21 @@ describe('#createQuery', () => {
         many_numbers: [],
       });
     });
+
+    it('builds URL from partial params', () => {
+      expect(
+        query.build({
+          text: ['fo o'],
+          boolean: [false],
+        }),
+      ).toEqual('text=fo+o&boolean=0');
+
+      expect(
+        query.build({
+          number: [],
+          many_numbers: [1, 2, 3, 4],
+        }),
+      ).toEqual('many_numbers=1&many_numbers=2&many_numbers=3&many_numbers=4');
+    });
   });
 });

@@ -33,7 +33,7 @@ export interface Query<Codec extends QueryCodec> {
   encode(values: Values<Codec>): Params<Codec>;
   decode(params: Params<Codec>): Values<Codec>;
   parse(search: string): Values<Codec>;
-  build(source: Values<Codec>): string;
+  build(source: Partial<Values<Codec>>): string;
 }
 
 export function createQuery<T extends QueryCodec>(codecs: T): Query<T> {
@@ -65,8 +65,14 @@ export function createQuery<T extends QueryCodec>(codecs: T): Query<T> {
     return decode(params as Params<T>);
   }
 
-  function build(source: Values<T>) {
-    const params = encode(source);
+  function build(source: Partial<Values<T>>) {
+    const values = { ...source } as Values<T>;
+    for (const key of keys as (keyof T)[]) {
+      if (!values[key]) {
+        values[key] = [];
+      }
+    }
+    const params = encode(values);
     return buildQuery(params);
   }
 
