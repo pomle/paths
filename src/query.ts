@@ -36,8 +36,18 @@ export interface Query<Codec extends QueryCodec> {
   build(source: Partial<Values<Codec>>): string;
 }
 
+function createEmpty<T extends string>(keys: T[]): Record<keyof T, []> {
+  const empty: Record<string, unknown[]> = {};
+  for (const key of keys) {
+    empty[key] = [];
+  }
+  return empty as Record<keyof T, []>;
+}
+
 export function createQuery<T extends QueryCodec>(codecs: T): Query<T> {
   const keys = Object.keys(codecs);
+
+  const empty = createEmpty(keys) as Record<keyof T, []>;
 
   function encode(values: Values<T>) {
     const params: Record<string, string[]> = {};
@@ -56,22 +66,12 @@ export function createQuery<T extends QueryCodec>(codecs: T): Query<T> {
   }
 
   function parse(search: string) {
-    const params = parseQuery(search);
-    for (const key of keys) {
-      if (!params[key]) {
-        params[key] = [];
-      }
-    }
-    return decode(params as Params<T>);
+    const params = { ...empty, ...parseQuery(search) } as Params<T>;
+    return decode(params);
   }
 
   function build(source: Partial<Values<T>>) {
-    const values = { ...source } as Values<T>;
-    for (const key of keys as (keyof T)[]) {
-      if (!values[key]) {
-        values[key] = [];
-      }
-    }
+    const values = { ...empty, ...source } as Values<T>;
     const params = encode(values);
     return buildQuery(params);
   }
