@@ -21,11 +21,11 @@ export function buildQuery(data: Record<string, string[]>) {
 
 export type QueryCodec = Record<string, Codec<any>>;
 
-export type Values<Codec extends QueryCodec> = {
+type Values<Codec extends QueryCodec> = {
   [key in keyof Codec]: ReturnType<Codec[key]['decode']>[];
 };
 
-export type Params<Codec extends QueryCodec> = {
+type Params<Codec extends QueryCodec> = {
   [key in keyof Codec]: string[];
 };
 

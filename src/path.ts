@@ -2,16 +2,12 @@ import { Codec } from './codec';
 
 export type PathCodec = Record<string, Codec<any>>;
 
-type Params<Source extends Record<string, unknown>> = {
-  [key in keyof Source]: string;
-};
-
-type InputParams<Codec extends PathCodec> = {
-  [key in keyof Codec]: Parameters<Codec[key]['encode']>[0];
-};
-
-type OutputParams<Codec extends PathCodec> = {
+type Values<Codec extends PathCodec> = {
   [key in keyof Codec]: ReturnType<Codec[key]['decode']>;
+};
+
+type Params<Codec extends PathCodec> = {
+  [key in keyof Codec]: string;
 };
 
 function createParser<Key extends string | number | symbol>(
@@ -46,11 +42,11 @@ function createParser<Key extends string | number | symbol>(
 export interface Path<Codec extends PathCodec> {
   path: string;
   codec: Codec;
-  url(params: InputParams<Codec>): string;
-  build(params: InputParams<Codec>): string;
-  parse(path: string): OutputParams<Codec>;
-  encode(params: InputParams<Codec>): Params<Codec>;
-  decode(params: Params<Codec>): OutputParams<Codec>;
+  url(params: Values<Codec>): string;
+  build(params: Values<Codec>): string;
+  parse(path: string): Values<Codec>;
+  encode(params: Values<Codec>): Params<Codec>;
+  decode(params: Params<Codec>): Values<Codec>;
   append<AdditionalCodec extends PathCodec>(
     pathName: string,
     codec: AdditionalCodec,
@@ -65,10 +61,10 @@ export function createPath<Codec extends PathCodec>(
 
   const parsePath = createParser<keyof Codec>(pathName, keys);
 
-  function encode(params: InputParams<Codec>) {
+  function encode(values: Values<Codec>) {
     const encoded: Record<string, string> = {};
     for (const key of keys) {
-      encoded[key] = encodeURIComponent(codec[key].encode(params[key]));
+      encoded[key] = encodeURIComponent(codec[key].encode(values[key]));
     }
     return encoded as Params<Codec>;
   }
@@ -78,7 +74,7 @@ export function createPath<Codec extends PathCodec>(
     for (const key of keys) {
       decoded[key] = codec[key].decode(decodeURIComponent(params[key]));
     }
-    return decoded as OutputParams<Codec>;
+    return decoded as Values<Codec>;
   }
 
   function parse(path: string) {
@@ -86,7 +82,7 @@ export function createPath<Codec extends PathCodec>(
     return decode(params);
   }
 
-  function build(params: Params<Codec>) {
+  function build(params: Values<Codec>) {
     const encoded = encode(params);
     return Object.entries(encoded).reduce((pathName, [key, value]) => {
       return pathName.replace(':' + key, value);
