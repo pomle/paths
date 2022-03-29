@@ -70,8 +70,7 @@ export function createPath<Codec extends PathCodec>(
   }
 
   function parse(path: string) {
-    const m = match(path);
-    return m ? m.values : null;
+    return match(path)?.values ?? null;
   }
 
   function build(params: Values<Codec>) {
