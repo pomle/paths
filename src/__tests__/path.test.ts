@@ -31,6 +31,10 @@ describe('#createPath', () => {
       it('returns null on non-matching paths', () => {
         expect(path.parse('/not/correct/path')).toEqual(null);
       });
+
+      it('returns null on under-matching paths', () => {
+        expect(path.parse('/text/fo%20o/2')).toEqual(null);
+      });
     });
 
     it('creates typed params from URL', () => {
