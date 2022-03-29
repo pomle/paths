@@ -48,6 +48,18 @@ const values = paths.userPost.parse('/user/pomle/posts/24');
 console.log(values); // Prints {userId: "pomle", postId: 24}
 ```
 
+Non-matching or under-matching returns null
+
+```ts
+import { paths } from './paths';
+
+// Returns null
+paths.userPost.parse('/not/user/posts');
+
+// Returns null
+paths.userPost.parse('/user/pomle');
+```
+
 Decode params already parsed
 
 ```ts
