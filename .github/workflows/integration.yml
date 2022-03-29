@@ -21,7 +21,7 @@ jobs:
         run: yarn run lint
 
       - name: Test
-        run: yarn run test
+        run: CI=1 yarn run test
 
       - name: Build
         run: yarn run build

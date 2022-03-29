@@ -23,7 +23,7 @@
     "build": "microbundle",
     "start": "microbundle watch",
     "lint": "eslint src --ext .ts,.tsx",
-    "test": "CI=1 jest test --env=jsdom"
+    "test": "jest test --env=jsdom"
   },
   "peerDependencies": {},
   "devDependencies": {
