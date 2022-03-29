@@ -42,4 +42,21 @@ describe('Codecs', () => {
       expect(codecs.boolean.decode('0')).toEqual(false);
     });
   });
+
+  describe('json codec', () => {
+    const text = 'eyJhIjoxLCJiIjp0cnVlLCJjIjpbMSx0cnVlLCJmb28iXSwiZCI6ImZvbyJ9';
+    const value = { a: 1, b: true, c: [1, true, 'foo'], d: 'foo' };
+
+    type Shape = typeof value;
+
+    const shape = codecs.json<Shape>();
+
+    it('encodes', () => {
+      expect(shape.encode(value)).toEqual(text);
+    });
+
+    it('decodes', () => {
+      expect(shape.decode(text)).toEqual(value);
+    });
+  });
 });
