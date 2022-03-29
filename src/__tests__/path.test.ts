@@ -19,7 +19,7 @@ describe('#createPath', () => {
       expect(path.url(params)).toEqual('/text/fo%20o/2/0');
     });
 
-    it('parse path string', () => {
+    it('parses path string', () => {
       expect(path.parse('/text/fo%20o/2/0')).toEqual(params);
     });
 
