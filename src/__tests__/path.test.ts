@@ -19,8 +19,18 @@ describe('#createPath', () => {
       expect(path.url(params)).toEqual('/text/fo%20o/2/0');
     });
 
-    it('parses path string', () => {
-      expect(path.parse('/text/fo%20o/2/0')).toEqual(params);
+    describe('#parse', () => {
+      it('parses path string', () => {
+        expect(path.parse('/text/fo%20o/2/0')).toEqual(params);
+      });
+
+      it('parses overmatching path string', () => {
+        expect(path.parse('/text/fo%20o/2/0/and/more/parts')).toEqual(params);
+      });
+
+      it('returns null on non-matching paths', () => {
+        expect(path.parse('/not/correct/path')).toEqual(null);
+      });
     });
 
     it('creates typed params from URL', () => {
