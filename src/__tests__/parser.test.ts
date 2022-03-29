@@ -17,32 +17,37 @@ describe('#createParser', () => {
     );
 
     describe('#matchPath', () => {
-      it('returns true if path is compatible', () => {
-        expect(parser.matchPath('/my/pontus/parsable/url/1234')).toBe(true);
-        expect(parser.matchPath('/my/burger/parsable/url/fm83')).toBe(true);
+      it('returns 0 if path is exact match', () => {
+        expect(parser.matchPath('/my/pontus/parsable/url/1234')).toBe(0);
+        expect(parser.matchPath('/my/burger/parsable/url/fm83')).toBe(0);
       });
 
-      it('returns true if path starts with parser', () => {
-        expect(parser.matchPath('/my/foo/parsable/url/bar/a')).toBe(true);
-        expect(parser.matchPath('/my/foo/parsable/url/bar/a/b')).toBe(true);
-        expect(parser.matchPath('/my/foo/parsable/url/bar/a/b/c')).toBe(true);
+      it('returns extra match count if path starts with parser', () => {
+        expect(parser.matchPath('/my/foo/parsable/url/bar/a')).toBe(1);
+        expect(parser.matchPath('/my/foo/parsable/url/bar/a/b')).toBe(2);
+        expect(parser.matchPath('/my/foo/parsable/url/bar/a/b/c')).toBe(3);
         expect(
           parser.matchPath('/my/foo/parsable/url/bar/and/more/parts'),
-        ).toBe(true);
+        ).toBe(3);
       });
 
-      it('returns false if any static part is mismatching', () => {
-        expect(parser.matchPath('/your/foo/parsable/url/bar')).toBe(false);
-        expect(parser.matchPath('/your/foo/parsable/url/bar')).toBe(false);
-        expect(parser.matchPath('/my/foo/nonparsable/url/bar')).toBe(false);
+      it('returns negative match count if any static part is mismatching', () => {
+        expect(parser.matchPath('/your/foo/parsable/url/bar')).toBe(-1);
+        expect(parser.matchPath('/your/foo/parsable/url/bar')).toBe(-1);
+        expect(parser.matchPath('/my/foo/nonparsable/url/bar')).toBe(-1);
+        expect(parser.matchPath('/no/part/of/this/matches')).toBe(-3);
+        expect(parser.matchPath('/no/part/of/this/matches')).toBe(-3);
+        expect(
+          parser.matchPath('/no/part/of/this/matches/and/has/superflous/parts'),
+        ).toBe(-3);
       });
 
-      it('returns false if part is matching', () => {
-        expect(parser.matchPath('/my')).toBe(false);
-        expect(parser.matchPath('/my/foo')).toBe(false);
-        expect(parser.matchPath('/my/foo/parsable')).toBe(false);
-        expect(parser.matchPath('/my/foo/parsable/url')).toBe(false);
-        expect(parser.matchPath('/my/foo/parsable/url/bar')).toBe(true);
+      it('returns negative match count if partly matching', () => {
+        expect(parser.matchPath('/my')).toBe(-2);
+        expect(parser.matchPath('/my/foo')).toBe(-2);
+        expect(parser.matchPath('/my/foo/parsable')).toBe(-1);
+        expect(parser.matchPath('/my/foo/parsable/url')).toBe(-1);
+        expect(parser.matchPath('/my/foo/parsable/url/bar')).toBe(0);
       });
     });
 
