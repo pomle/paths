@@ -22,9 +22,8 @@
   "scripts": {
     "build": "microbundle-crl --no-compress --format modern,cjs",
     "start": "microbundle-crl watch --no-compress --format modern,cjs",
-    "test": "yarn run test:unit && yarn run test:lint && yarn run build",
-    "test:lint": "eslint src --ext .ts,.tsx",
-    "test:unit": "CI=1 jest test --env=jsdom"
+    "lint": "eslint src --ext .ts,.tsx",
+    "test": "CI=1 jest test --env=jsdom"
   },
   "peerDependencies": {},
   "devDependencies": {
