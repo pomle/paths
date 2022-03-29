@@ -128,7 +128,9 @@ codecs.string; // Encodes strings safely for URLs
 codecs.number; // Encodes numbers safely for URLs
 ```
 
-Create custom codecs. Do not encode and decode with `encodeURIComponent` or `decodeURIComponent` manually. It will be handled by the library.
+#### Creating custom codecs
+
+Do not encode and decode with `encodeURIComponent` or `decodeURIComponent` manually. It will be handled by the library.
 
 ```ts
 import { createPath, createCodec } from '@pomle/paths';
