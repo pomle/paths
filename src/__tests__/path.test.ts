@@ -19,6 +19,36 @@ describe('#createPath', () => {
       expect(path.url(params)).toEqual('/text/fo%20o/2/0');
     });
 
+    describe('#match', () => {
+      it('returns params if path matches', () => {
+        expect(path.match('/text/fo%20o/2/0')?.values).toEqual(params);
+      });
+
+      it('sets exact flag to true on perfactly matching', () => {
+        expect(path.match('/text/fo%20o/2/0')?.exact).toBe(true);
+      });
+
+      it('parses overmatching path string', () => {
+        expect(path.match('/text/fo%20o/2/0/and/more/parts')?.values).toEqual(
+          params,
+        );
+      });
+
+      it('sets exact flag to false on overmatching', () => {
+        expect(path.match('/text/fo%20o/2/0/and/more/parts')?.exact).toBe(
+          false,
+        );
+      });
+
+      it('returns null on non-matching paths', () => {
+        expect(path.match('/not/correct/path')).toEqual(null);
+      });
+
+      it('returns null on under-matching paths', () => {
+        expect(path.match('/text/fo%20o/2')).toEqual(null);
+      });
+    });
+
     describe('#parse', () => {
       it('parses path string', () => {
         expect(path.parse('/text/fo%20o/2/0')).toEqual(params);

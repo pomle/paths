@@ -11,11 +11,17 @@ type Params<Codec extends PathCodec> = {
   [key in keyof Codec]: string;
 };
 
+type Match<Codec extends PathCodec> = {
+  values: Values<Codec>;
+  exact: boolean;
+};
+
 export interface Path<Codec extends PathCodec> {
   path: string;
   codec: Codec;
   url(params: Values<Codec>): string;
   build(params: Values<Codec>): string;
+  match(path: string): Match<Codec> | null;
   parse(path: string): Values<Codec> | null;
   encode(params: Values<Codec>): Params<Codec>;
   decode(params: Params<Codec>): Values<Codec>;
@@ -49,12 +55,23 @@ export function createPath<Codec extends PathCodec>(
     return decoded as Values<Codec>;
   }
 
-  function parse(path: string) {
-    if (parser.matchPath(path) < 0) {
+  function match(path: string) {
+    const diff = parser.matchPath(path);
+    if (diff < 0) {
       return null;
     }
+
     const params = parser.parsePath(path);
-    return decode(params);
+
+    return {
+      values: decode(params),
+      exact: diff === 0,
+    };
+  }
+
+  function parse(path: string) {
+    const m = match(path);
+    return m ? m.values : null;
   }
 
   function build(params: Values<Codec>) {
@@ -76,6 +93,7 @@ export function createPath<Codec extends PathCodec>(
     codec,
     encode,
     decode,
+    match,
     parse,
     build,
     url: build,
