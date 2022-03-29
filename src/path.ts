@@ -1,3 +1,4 @@
+import { createParser } from './parser';
 import { Codec } from './codec';
 
 export type PathCodec = Record<string, Codec<any>>;
@@ -9,35 +10,6 @@ type Values<Codec extends PathCodec> = {
 type Params<Codec extends PathCodec> = {
   [key in keyof Codec]: string;
 };
-
-function createParser<Key extends string | number | symbol>(
-  pathName: string,
-  keys: Key[],
-) {
-  const components = pathName.split('/');
-  const positions = {} as Record<Key, number>;
-
-  for (const key of keys) {
-    const placeholder = `:${key}`;
-
-    const pos = components.indexOf(placeholder);
-    if (pos === -1) {
-      throw new Error(`Param ${placeholder} not in path name`);
-    }
-
-    positions[key] = pos;
-  }
-
-  return function parsePath(pathName: string) {
-    const components = pathName.split('/');
-    const values = {} as Record<Key, string>;
-    for (const key of keys) {
-      const index = positions[key];
-      values[key] = components[index];
-    }
-    return values;
-  };
-}
 
 export interface Path<Codec extends PathCodec> {
   path: string;
@@ -59,7 +31,7 @@ export function createPath<Codec extends PathCodec>(
 ): Path<Codec> {
   const keys = Object.keys(codec);
 
-  const parsePath = createParser<keyof Codec>(pathName, keys);
+  const parser = createParser<keyof Codec>(pathName, keys);
 
   function encode(values: Values<Codec>) {
     const encoded: Record<string, string> = {};
@@ -78,7 +50,7 @@ export function createPath<Codec extends PathCodec>(
   }
 
   function parse(path: string) {
-    const params = parsePath(path);
+    const params = parser.parsePath(path);
     return decode(params);
   }
 
