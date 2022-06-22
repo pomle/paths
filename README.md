@@ -6,7 +6,7 @@ A JavaScript and TypeScript lib for handling type rich URLs in web apps.
 
 ### Paths
 
-Define paths
+Start by defining paths. Paths are usually created once in a single module, then imported for usage.
 
 ```ts
 import { createPath, codecs } from '@pomle/paths';
