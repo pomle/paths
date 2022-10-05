@@ -8,7 +8,7 @@ describe('#buildQuery', () => {
       b: ['2', '4'],
     });
 
-    expect(text).toEqual('a=1&b=2&b=4');
+    expect(text).toStrictEqual('a=1&b=2&b=4');
   });
 });
 
@@ -16,7 +16,7 @@ describe('#parseQuery', () => {
   it('parses a query string to object', () => {
     const value = parseQuery('a=1&b=2&b=4');
 
-    expect(value).toEqual({
+    expect(value).toStrictEqual({
       a: ['1'],
       b: ['2', '4'],
     });
@@ -47,15 +47,15 @@ describe('#createQuery', () => {
     });
 
     it('decodes text to values', () => {
-      expect(query.decode(params)).toEqual(values);
+      expect(query.decode(params)).toStrictEqual(values);
     });
 
     it('encodes values to text', () => {
-      expect(query.encode(values)).toEqual(params);
+      expect(query.encode(values)).toStrictEqual(params);
     });
 
     it('encodes search query from params', () => {
-      expect(query.build(values)).toEqual(
+      expect(query.build(values)).toStrictEqual(
         'text=fo+o&number=2&boolean=0&many_numbers=1&many_numbers=2&many_numbers=3',
       );
     });
@@ -65,11 +65,11 @@ describe('#createQuery', () => {
         query.parse(
           'text=fo+o&number=2&boolean=0&many_numbers=1&many_numbers=2&many_numbers=3',
         ),
-      ).toEqual(values);
+      ).toStrictEqual(values);
     });
 
     it('provides keys for missing params', () => {
-      expect(query.parse('text=fo+o&number=2&boolean=0')).toEqual({
+      expect(query.parse('text=fo+o&number=2&boolean=0')).toStrictEqual({
         text: ['fo o'],
         number: [2],
         boolean: [false],
@@ -83,14 +83,16 @@ describe('#createQuery', () => {
           text: ['fo o'],
           boolean: [false],
         }),
-      ).toEqual('text=fo+o&boolean=0');
+      ).toStrictEqual('text=fo+o&boolean=0');
 
       expect(
         query.build({
           number: [],
           many_numbers: [1, 2, 3, 4],
         }),
-      ).toEqual('many_numbers=1&many_numbers=2&many_numbers=3&many_numbers=4');
+      ).toStrictEqual(
+        'many_numbers=1&many_numbers=2&many_numbers=3&many_numbers=4',
+      );
     });
   });
 });

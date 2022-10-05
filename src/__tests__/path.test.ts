@@ -12,11 +12,11 @@ describe('#createPath', () => {
     });
 
     it('builds path from params', () => {
-      expect(path.build(params)).toEqual('/text/fo%20o/2/0');
+      expect(path.build(params)).toStrictEqual('/text/fo%20o/2/0');
     });
 
     it('provides URL alias', () => {
-      expect(path.url(params)).toEqual('/text/fo%20o/2/0');
+      expect(path.url(params)).toStrictEqual('/text/fo%20o/2/0');
     });
 
     describe('#match', () => {
@@ -35,30 +35,32 @@ describe('#createPath', () => {
 
     describe('#parse', () => {
       it('parses path string', () => {
-        expect(path.parse('/text/fo%20o/2/0')).toEqual(params);
+        expect(path.parse('/text/fo%20o/2/0')).toStrictEqual(params);
       });
 
       it('parses overmatching path string', () => {
-        expect(path.parse('/text/fo%20o/2/0/and/more/parts')).toEqual(params);
+        expect(path.parse('/text/fo%20o/2/0/and/more/parts')).toStrictEqual(
+          params,
+        );
       });
 
       it('returns null on non-matching paths', () => {
-        expect(path.parse('/not/correct/path')).toEqual(null);
+        expect(path.parse('/not/correct/path')).toStrictEqual(null);
       });
 
       it('returns null on under-matching paths', () => {
-        expect(path.parse('/text/fo%20o/2')).toEqual(null);
+        expect(path.parse('/text/fo%20o/2')).toStrictEqual(null);
       });
     });
 
     it('creates typed params from URL', () => {
       expect(
         path.decode({ text: 'fo%20o', number: '2', boolean: '0' }),
-      ).toEqual(params);
+      ).toStrictEqual(params);
     });
 
     it('typed string params from typed params', () => {
-      expect(path.encode(params)).toEqual({
+      expect(path.encode(params)).toStrictEqual({
         text: 'fo%20o',
         number: '2',
         boolean: '0',
@@ -73,7 +75,7 @@ describe('#createPath', () => {
       const appendedParams = { ...params, extra: '22bbee' };
 
       it('encodes URL from params', () => {
-        expect(appendedPath.url(appendedParams)).toEqual(
+        expect(appendedPath.url(appendedParams)).toStrictEqual(
           '/text/fo%20o/2/0/extra/22bbee',
         );
       });
@@ -102,7 +104,7 @@ describe('#createPath', () => {
             boolean: '0',
             extra: '22bbee',
           }),
-        ).toEqual(appendedParams);
+        ).toStrictEqual(appendedParams);
       });
     });
   });
