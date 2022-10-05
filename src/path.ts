@@ -27,10 +27,13 @@ export interface Path<Codec extends PathCodec> {
 }
 
 export function createPath<Codec extends PathCodec>(
-  pathName: string,
+  schema: string,
   codec: Codec,
 ): Path<Codec> {
   const keys = Object.keys(codec);
+
+  const parts = schema.split('/').filter((part) => part.length > 0);
+  const pathName = '/' + parts.join('/');
 
   const parser = createParser<keyof Codec>(pathName, keys);
 
@@ -70,10 +73,14 @@ export function createPath<Codec extends PathCodec>(
   }
 
   function append<AdditionalCodec extends PathCodec>(
-    appendixPathName: string,
+    appendixSchema: string,
     addCodec: AdditionalCodec,
   ) {
-    return createPath(pathName + appendixPathName, { ...codec, ...addCodec });
+    const composed = pathName + '/' + appendixSchema;
+    return createPath(composed, {
+      ...codec,
+      ...addCodec,
+    });
   }
 
   return {
