@@ -78,6 +78,22 @@ describe('#createPath', () => {
         );
       });
 
+      it('matches path', () => {
+        expect(appendedPath.match('/text/fo%20o/2/0/extra/22bbee')).toBe(0);
+      });
+
+      it('matches sub path', () => {
+        expect(
+          appendedPath.match('/text/fo%20o/2/0/extra/22bbee/and/more/extra'),
+        ).toBe(3);
+      });
+
+      it('parses  sub', () => {
+        expect(
+          appendedPath.match('/text/fo%20o/2/0/extra/22bbee/and/more/extra'),
+        ).toBe(3);
+      });
+
       it('creates typed params from URL', () => {
         expect(
           appendedPath.decode({
