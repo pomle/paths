@@ -6,7 +6,7 @@ export function createParser<Key extends string | number | symbol>(
   const positions = {} as Record<Key, number>;
 
   for (const key of keys) {
-    const placeholder = `:${key}`;
+    const placeholder = `:${String(key)}`;
 
     const pos = components.indexOf(placeholder);
     if (pos === -1) {
