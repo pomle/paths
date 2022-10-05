@@ -4,7 +4,7 @@ export function parseQuery(search: string) {
   const params = new URLSearchParams(search);
   const data: Record<string, string[]> = {};
   for (const key of params.keys()) {
-    data[key] = params.getAll(key);
+    data[key] = Array.from(params.getAll(key));
   }
   return data;
 }
