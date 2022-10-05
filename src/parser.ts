@@ -19,17 +19,19 @@ export function createParser<Key extends string | number | symbol>(
   return {
     matchPath(pathName: string) {
       const parts = pathName.split('/');
-      if (parts.length < components.length) {
-        return false;
+      const diff = parts.length - components.length;
+
+      if (diff < 0) {
+        return diff;
       }
 
       for (const [index, word] of components.entries()) {
         if (word[0] !== ':' && word !== parts[index]) {
-          return false;
+          return index - components.length;
         }
       }
 
-      return true;
+      return diff;
     },
 
     parsePath(pathName: string) {
