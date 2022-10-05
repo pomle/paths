@@ -17,6 +17,7 @@ export interface Path<Codec extends PathCodec> {
   url(params: Values<Codec>): string;
   build(params: Values<Codec>): string;
   parse(path: string): Values<Codec> | null;
+  match(path: string): number;
   encode(params: Values<Codec>): Params<Codec>;
   decode(params: Params<Codec>): Values<Codec>;
   append<AdditionalCodec extends PathCodec>(
@@ -49,8 +50,12 @@ export function createPath<Codec extends PathCodec>(
     return decoded as Values<Codec>;
   }
 
+  function match(path: string) {
+    return parser.matchPath(path);
+  }
+
   function parse(path: string) {
-    if (parser.matchPath(path) < 0) {
+    if (match(path) < 0) {
       return null;
     }
     const params = parser.parsePath(path);
@@ -76,6 +81,7 @@ export function createPath<Codec extends PathCodec>(
     codec,
     encode,
     decode,
+    match,
     parse,
     build,
     url: build,
