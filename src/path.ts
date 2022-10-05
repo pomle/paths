@@ -50,7 +50,7 @@ export function createPath<Codec extends PathCodec>(
   }
 
   function parse(path: string) {
-    if (!parser.matchPath(path)) {
+    if (parser.matchPath(path) < 0) {
       return null;
     }
     const params = parser.parsePath(path);
