@@ -7,12 +7,12 @@ describe('Codecs', () => {
 
     it('encodes', () => {
       const result = codecs.string.encode(plain);
-      expect(result).toEqual(encoded);
+      expect(result).toStrictEqual(encoded);
     });
 
     it('decodes', () => {
       const result = codecs.string.decode(encoded);
-      expect(result).toEqual(plain);
+      expect(result).toStrictEqual(plain);
     });
   });
 
@@ -22,24 +22,24 @@ describe('Codecs', () => {
 
     it('encodes', () => {
       const result = codecs.number.encode(plain);
-      expect(result).toEqual(encoded);
+      expect(result).toStrictEqual(encoded);
     });
 
     it('decodes', () => {
       const result = codecs.number.decode(encoded);
-      expect(result).toEqual(plain);
+      expect(result).toStrictEqual(plain);
     });
   });
 
   describe('bool codec', () => {
     it('encodes', () => {
-      expect(codecs.boolean.encode(true)).toEqual('1');
-      expect(codecs.boolean.encode(false)).toEqual('0');
+      expect(codecs.boolean.encode(true)).toStrictEqual('1');
+      expect(codecs.boolean.encode(false)).toStrictEqual('0');
     });
 
     it('decodes', () => {
-      expect(codecs.boolean.decode('1')).toEqual(true);
-      expect(codecs.boolean.decode('0')).toEqual(false);
+      expect(codecs.boolean.decode('1')).toStrictEqual(true);
+      expect(codecs.boolean.decode('0')).toStrictEqual(false);
     });
   });
 });

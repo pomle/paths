@@ -47,22 +47,24 @@ describe('#createParser', () => {
 
     describe('#parsePath', () => {
       it('parses arguments frivolously if it can based on position', () => {
-        expect(parser.parsePath('/a/pontus/b/c/1234')).toEqual({
+        expect(parser.parsePath('/a/pontus/b/c/1234')).toStrictEqual({
           name: 'pontus',
           number: '1234',
         });
 
-        expect(parser.parsePath('/quack/pontus/pluck/truck/1234')).toEqual({
+        expect(
+          parser.parsePath('/quack/pontus/pluck/truck/1234'),
+        ).toStrictEqual({
           name: 'pontus',
           number: '1234',
         });
 
-        expect(parser.parsePath('/')).toEqual({
+        expect(parser.parsePath('/')).toStrictEqual({
           name: undefined,
           number: undefined,
         });
 
-        expect(parser.parsePath('/quack/pontus/pluck/truck')).toEqual({
+        expect(parser.parsePath('/quack/pontus/pluck/truck')).toStrictEqual({
           name: 'pontus',
           number: undefined,
         });
