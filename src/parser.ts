@@ -22,9 +22,14 @@ export function createParser<Key extends string | number | symbol>(
       if (parts.length < components.length) {
         return false;
       }
-      return components.every((word, index) => {
-        return word[0] === ':' || word === parts[index];
-      });
+
+      for (const [index, word] of components.entries()) {
+        if (word[0] !== ':' && word !== parts[index]) {
+          return false;
+        }
+      }
+
+      return true;
     },
 
     parsePath(pathName: string) {
