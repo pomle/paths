@@ -19,6 +19,20 @@ describe('#createPath', () => {
       expect(path.url(params)).toEqual('/text/fo%20o/2/0');
     });
 
+    describe('#match', () => {
+      it('returns positive integer if overmatch', () => {
+        expect(path.match('/text/fo%20o/2/0/extra/parts')).toBe(2);
+      });
+
+      it('returns 0 if exact match', () => {
+        expect(path.match('/text/fo%20o/2/0')).toBe(0);
+      });
+
+      it('returns negative integer if undermatch', () => {
+        expect(path.match('/text')).toBe(-3);
+      });
+    });
+
     describe('#parse', () => {
       it('parses path string', () => {
         expect(path.parse('/text/fo%20o/2/0')).toEqual(params);
