@@ -34,6 +34,24 @@ describe('#sanitizePathName', () => {
 });
 
 describe('#createPath', () => {
+  describe('normalization', () => {
+    it('automatically prepends missing slash', () => {
+      const path = createPath('should/have/heading/slash', {});
+      expect(path.name).toBe('/should/have/heading/slash');
+    });
+
+    it('automatically removes trailing slash', () => {
+      const path = createPath('should/not/have/trainling/slash/', {});
+      expect(path.name).toBe('/should/not/have/trainling/slash');
+    });
+
+    it('automatically injects missing slash on append', () => {
+      const first = createPath('first', {});
+      const second = first.append('second', {});
+      expect(second.name).toBe('/first/second');
+    });
+  });
+
   describe('#path', () => {
     const params = { text: 'fo o', number: 2, boolean: false };
 
