@@ -12,7 +12,7 @@ type Params<Codec extends PathCodec> = {
 };
 
 export interface Path<Codec extends PathCodec> {
-  path: string;
+  name: string;
   codec: Codec;
   url(params: Values<Codec>): string;
   build(params: Values<Codec>): string;
@@ -90,7 +90,7 @@ export function createPath<Codec extends PathCodec>(
   }
 
   return {
-    path: pathName,
+    name: pathName,
     codec,
     encode,
     decode,
