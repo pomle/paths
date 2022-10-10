@@ -38,6 +38,8 @@ export function createPath<Codec extends PathCodec>(
   pathName: string,
   codec: Codec,
 ): Path<Codec> {
+  pathName = '/' + sanitizePathName(pathName);
+
   const keys = Object.keys(codec);
 
   const parser = createParser<keyof Codec>(pathName, keys);
@@ -81,7 +83,10 @@ export function createPath<Codec extends PathCodec>(
     appendixPathName: string,
     addCodec: AdditionalCodec,
   ) {
-    return createPath(pathName + appendixPathName, { ...codec, ...addCodec });
+    return createPath(pathName + '/' + appendixPathName, {
+      ...codec,
+      ...addCodec,
+    });
   }
 
   return {
