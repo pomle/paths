@@ -1,8 +1,7 @@
 export function createParser<Key extends string | number | symbol>(
-  pathName: string,
+  components: string[],
   keys: Key[],
 ) {
-  const components = pathName.split('/');
   const positions = {} as Record<Key, number>;
 
   for (const key of keys) {
@@ -17,8 +16,7 @@ export function createParser<Key extends string | number | symbol>(
   }
 
   return {
-    matchPath(pathName: string) {
-      const parts = pathName.split('/');
+    matchPath(parts: string[]) {
       const diff = parts.length - components.length;
 
       if (diff < 0) {
@@ -34,8 +32,7 @@ export function createParser<Key extends string | number | symbol>(
       return diff;
     },
 
-    parsePath(pathName: string) {
-      const parts = pathName.split('/');
+    parsePath(parts: string[]) {
       const values = {} as Record<Key, string>;
       for (const key of keys) {
         const index = positions[key];

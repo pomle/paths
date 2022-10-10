@@ -1,34 +1,34 @@
-import { createPath, sanitizePathName } from '../path';
+import { createPath, createParts } from '../path';
 import * as codec from '../codecs';
 
-describe('#sanitizePathName', () => {
+describe('#createParts', () => {
   it('removes heading slash', () => {
-    const path = sanitizePathName('/my/path');
+    const path = createParts('/my/path').join('/');
     expect(path).toBe('my/path');
   });
 
   it('removes trailing slash', () => {
-    const path = sanitizePathName('my/path/');
+    const path = createParts('my/path/').join('/');
     expect(path).toBe('my/path');
   });
 
   it('removes empty segments', () => {
-    const path = sanitizePathName('///my/// //path////');
+    const path = createParts('///my/// //path////').join('/');
     expect(path).toBe('my/path');
   });
 
   it('removes heading white-space', () => {
-    const path = sanitizePathName(' my/ first/path');
+    const path = createParts(' my/ first/path').join('/');
     expect(path).toBe('my/first/path');
   });
 
   it('removes trailing white-space', () => {
-    const path = sanitizePathName('my/second /path ');
+    const path = createParts('my/second /path ').join('/');
     expect(path).toBe('my/second/path');
   });
 
   it('keeps white-space in segments', () => {
-    const path = sanitizePathName('my/ segmented awesome /path ');
+    const path = createParts('my/ segmented awesome /path ').join('/');
     expect(path).toBe('my/segmented awesome/path');
   });
 });
