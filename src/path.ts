@@ -26,6 +26,14 @@ export interface Path<Codec extends PathCodec> {
   ): Path<Codec & AdditionalCodec>;
 }
 
+export function sanitizePathName(pathName: string) {
+  return pathName
+    .split('/')
+    .map((part) => part.trim())
+    .filter((part) => part.length > 0)
+    .join('/');
+}
+
 export function createPath<Codec extends PathCodec>(
   pathName: string,
   codec: Codec,
