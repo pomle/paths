@@ -26,23 +26,23 @@ export interface Path<Codec extends PathCodec> {
   ): Path<Codec & AdditionalCodec>;
 }
 
-export function sanitizePathName(pathName: string) {
+export function createParts(pathName: string) {
   return pathName
     .split('/')
     .map((part) => part.trim())
-    .filter((part) => part.length > 0)
-    .join('/');
+    .filter((part) => part.length > 0);
 }
 
 export function createPath<Codec extends PathCodec>(
   pathName: string,
   codec: Codec,
 ): Path<Codec> {
-  pathName = '/' + sanitizePathName(pathName);
+  const components = createParts(pathName);
+  pathName = '/' + components.join('/');
 
   const keys = Object.keys(codec);
 
-  const parser = createParser<keyof Codec>(pathName, keys);
+  const parser = createParser<keyof Codec>(components, keys);
 
   function encode(values: Values<Codec>) {
     const encoded: Record<string, string> = {};
@@ -60,15 +60,17 @@ export function createPath<Codec extends PathCodec>(
     return decoded as Values<Codec>;
   }
 
-  function match(path: string) {
-    return parser.matchPath(path);
+  function match(pathName: string) {
+    const parts = createParts(pathName);
+    return parser.matchPath(parts);
   }
 
-  function parse(path: string) {
-    if (match(path) < 0) {
+  function parse(pathName: string) {
+    const parts = createParts(pathName);
+    if (parser.matchPath(parts) < 0) {
       return null;
     }
-    const params = parser.parsePath(path);
+    const params = parser.parsePath(parts);
     return decode(params);
   }
 
