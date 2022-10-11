@@ -3,33 +3,33 @@ import * as codec from '../codecs';
 
 describe('#createParts', () => {
   it('removes heading slash', () => {
-    const path = createParts('/my/path').join('/');
-    expect(path).toBe('my/path');
+    const path = createParts('/my/path');
+    expect(path).toStrictEqual(['my', 'path']);
   });
 
   it('removes trailing slash', () => {
-    const path = createParts('my/path/').join('/');
-    expect(path).toBe('my/path');
+    const path = createParts('my/path/');
+    expect(path).toStrictEqual(['my', 'path']);
   });
 
   it('removes empty segments', () => {
-    const path = createParts('///my/// //path////').join('/');
-    expect(path).toBe('my/path');
+    const path = createParts('///my/// //path////');
+    expect(path).toStrictEqual(['my', 'path']);
   });
 
   it('removes heading white-space', () => {
-    const path = createParts(' my/ first/path').join('/');
-    expect(path).toBe('my/first/path');
+    const path = createParts(' my/ first/path');
+    expect(path).toStrictEqual(['my', 'first', 'path']);
   });
 
   it('removes trailing white-space', () => {
-    const path = createParts('my/second /path ').join('/');
-    expect(path).toBe('my/second/path');
+    const path = createParts('my/second /path ');
+    expect(path).toStrictEqual(['my', 'second', 'path']);
   });
 
   it('keeps white-space in segments', () => {
-    const path = createParts('my/ segmented awesome /path ').join('/');
-    expect(path).toBe('my/segmented awesome/path');
+    const path = createParts('my/ segmented awesome /path ');
+    expect(path).toStrictEqual(['my', 'segmented awesome', 'path']);
   });
 });
 
