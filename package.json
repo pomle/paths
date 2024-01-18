@@ -20,7 +20,7 @@
     "node": ">=10"
   },
   "scripts": {
-    "build": "microbundle",
+    "build": "microbundle --target node",
     "start": "microbundle watch",
     "lint": "eslint src --ext .ts,.tsx",
     "test": "jest test --env=jsdom"
