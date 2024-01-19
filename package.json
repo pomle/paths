@@ -1,6 +1,6 @@
 {
   "name": "@pomle/paths",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "TypeScript library for handling type safe and type rich paths and query params",
   "author": "Pontus Alexander <pontus.alexander@gmail.com>",
   "license": "MIT",
@@ -20,7 +20,7 @@
     "node": ">=10"
   },
   "scripts": {
-    "build": "microbundle",
+    "build": "microbundle --target node",
     "start": "microbundle watch",
     "lint": "eslint src --ext .ts,.tsx",
     "test": "jest test --env=jsdom"
