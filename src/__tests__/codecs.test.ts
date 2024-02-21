@@ -154,13 +154,15 @@ describe('Codecs', () => {
     });
 
     describe('using custom type', () => {
-      const MyTypeOne = {
+      type MyType = { toString(): string };
+
+      const MyTypeOne: MyType = {
         toString() {
           return 'one';
         },
       };
 
-      const MyTypeTwo = {
+      const MyTypeTwo: MyType = {
         toString() {
           return 'two';
         },

@@ -27,7 +27,7 @@ export const oneOf = <T extends { toString: () => string }>(
     valid.set(key, option);
   }
 
-  return createCodec(
+  return createCodec<T>(
     (value: T) => value.toString(),
     (param: string) => {
       return valid.get(param) ?? options[0];
