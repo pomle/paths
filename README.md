@@ -94,7 +94,7 @@ Parse query string from URL
 const values = searchFilter.parse(window.location.search);
 
 console.log(values);
-/* 
+/*
 {
   username: ["Pontus Alexander"],
   range: [3, 5]
@@ -118,14 +118,63 @@ console.log(qs);
 
 ### Codecs
 
-There are 3 codecs bundled
+There are 4 codecs bundled
+
+```ts
+import { codecs } from '@pomle/paths';
+```
+
+#### `codecs.string`
+
+Encodes strings safely
 
 ```ts
 import { createQuery, codecs } from '@pomle/paths';
 
-codecs.boolean; // Encodes true and false as 1 and 0
-codecs.string; // Encodes strings safely for URLs
-codecs.number; // Encodes numbers safely for URLs
+const searchOptions = createQuery({
+  query: codecs.string,
+});
+```
+
+#### `codecs.boolean`
+
+Encodes true/false as "0" and "1"
+
+```ts
+import { createQuery, codecs } from '@pomle/paths';
+
+const viewOptions = createQuery({
+  showAll: codecs.boolean,
+});
+```
+
+#### `codecs.number`
+
+Encodes number safely
+
+```ts
+import { createQuery, codecs } from '@pomle/paths';
+
+const searchOptions = createQuery({
+  pageSize: codecs.number,
+  pageNo: codecs.number,
+});
+```
+
+#### `codecs.oneOf`
+
+Ensures values are in a list of known values. If no match is found, first is returned.
+
+```ts
+import { createQuery, codecs } from '@pomle/paths';
+
+const CAR_TYPES = ['sedan', 'hatchback', 'truck'] as const;
+
+const carType = codecs.oneOf(CAR_TYPES);
+
+const carOptions = createQuery({
+  type: carType,
+});
 ```
 
 #### Creating custom codecs
@@ -156,58 +205,38 @@ const url = bookings.url({
 
 ## Codec Tips!
 
-Create a one-of-guard to ensure a value is in a set of acceptable values.
+The `oneOf` codec can take enums.
+
 ```ts
-function oneOf<T extends unknown>(values: T[]) {
-  return function ensureOneOf(value: unknown): T {
-    if (!values.includes(value as T)) {
-      throw new Error(`Value not one of ${values.join(', ')}`);
-    }
-    return value as T;
-  };
-}
-```
-
-Mapping string union to params via codec.
-```ts
-import { createCodec } from '@pomle/paths';
-import { oneOf } from "./one-of";
-
-type DoorState = 'open' | 'closed';
-const DOOR_STATES: DoorState[] = ['open', 'closed'];
-
-// String unions and URL values are always strings - no conversion of value needed.
-const doorCodec = createCodec<DoorState>(
-  (source: DoorState) => source.toString(),
-  oneOf(DOOR_STATES),
-);
-```
-
-Mapping string union or enums to params via codec.
-```ts
-import { createCodec } from '@pomle/paths';
-import { oneOf } from "./one-of";
-
-enum MessageStatus {
-  Sent,
-  Received,
-  Read,
+enum State {
+  Low,
+  Medium,
+  High,
 }
 
-const MESSAGE_STATUSES = [
-  MessageStatus.Sent,
-  MessageStatus.Received,
-  MessageStatus.Read,
-];
+const states = [State.Low, State.Medium, State.High] as const;
+const intensity = codecs.oneOf(states);
 
-const ensureMessageStatus = oneOf(MESSAGE_STATUSES);
+const options = createQuery({
+  strength: intensity,
+});
+```
 
-// Enums are numbers by default - convert URL value to number and then check.
-const messageStatusCodec = createCodec<MessageStatus>(
-  (source: MessageStatus) => source.toString(),
-  (source: string) => {
-    const number = parseFloat(source);
-    return ensureMessageStatus(number);
+The `oneOf` codec can take any object that implements `.toString`.
+
+```ts
+const MyTypeOne = {
+  toString() {
+    return 'one';
   },
-);
+};
+
+const MyTypeTwo = {
+  toString() {
+    return 'two';
+  },
+};
+
+const states = [MyTypeOne, MyTypeTwo] as const;
+const state = codecs.oneOf(states);
 ```
