@@ -38,8 +38,8 @@ describe('Codecs', () => {
     });
 
     it('decodes', () => {
-      expect(codecs.boolean.decode('1')).toStrictEqual(true);
-      expect(codecs.boolean.decode('0')).toStrictEqual(false);
+      expect(codecs.boolean.decode('1')).toBe(true);
+      expect(codecs.boolean.decode('0')).toBe(false);
     });
   });
 
@@ -75,11 +75,11 @@ describe('Codecs', () => {
 
       describe('decode', () => {
         it('decodes', () => {
-          expect(state.decode('2')).toStrictEqual(2);
+          expect(state.decode('2')).toBe(2);
         });
 
         it('returns first option if no match', () => {
-          expect(state.decode('miss')).toStrictEqual(1);
+          expect(state.decode('miss')).toBe(1);
         });
       });
     });
@@ -94,11 +94,11 @@ describe('Codecs', () => {
 
       describe('decode', () => {
         it('decodes', () => {
-          expect(state.decode('high 3')).toStrictEqual('high 3');
+          expect(state.decode('high 3')).toBe('high 3');
         });
 
         it('returns first option if no match', () => {
-          expect(state.decode('miss')).toStrictEqual('low 1');
+          expect(state.decode('miss')).toBe('low 1');
         });
       });
     });
@@ -119,11 +119,11 @@ describe('Codecs', () => {
 
       describe('decode', () => {
         it('decodes', () => {
-          expect(state.decode('2')).toStrictEqual(State.High);
+          expect(state.decode('2')).toBe(State.High);
         });
 
         it('returns first option if no match', () => {
-          expect(state.decode('miss')).toStrictEqual(State.Low);
+          expect(state.decode('miss')).toBe(State.Low);
         });
       });
     });
@@ -144,11 +144,11 @@ describe('Codecs', () => {
 
       describe('decode', () => {
         it('decodes', () => {
-          expect(state.decode('high')).toStrictEqual(State.High);
+          expect(state.decode('high')).toBe(State.High);
         });
 
         it('returns first option if no match', () => {
-          expect(state.decode('miss')).toStrictEqual(State.Low);
+          expect(state.decode('miss')).toBe(State.Low);
         });
       });
     });
@@ -177,11 +177,11 @@ describe('Codecs', () => {
 
       describe('decode', () => {
         it('decodes', () => {
-          expect(state.decode('two')).toStrictEqual(MyTypeTwo);
+          expect(state.decode('two')).toBe(MyTypeTwo);
         });
 
         it('returns first option if no match', () => {
-          expect(state.decode('miss')).toStrictEqual(MyTypeOne);
+          expect(state.decode('miss')).toBe(MyTypeOne);
         });
       });
     });
