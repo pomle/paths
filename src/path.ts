@@ -85,6 +85,12 @@ export function createPath<Codec extends PathCodec>(
     appendixPathName: string,
     addCodec: AdditionalCodec,
   ) {
+    for (const key of keys) {
+      if (addCodec[key]) {
+        throw new Error(`Appended codec collides on :${key}`);
+      }
+    }
+
     return createPath(pathName + '/' + appendixPathName, {
       ...codec,
       ...addCodec,
