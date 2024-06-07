@@ -103,6 +103,20 @@ describe('#createPath', () => {
       });
     });
 
+    describe('#append', () => {
+      it('throws if codec has overlapping keys', () => {
+        const path = createPath('/:foo', {
+          foo: codec.string,
+        });
+
+        expect(() => {
+          path.append('/:foo', {
+            foo: codec.string,
+          });
+        }).toThrow(new Error('Appended codec collides on :foo'));
+      });
+    });
+
     it('creates typed params from URL', () => {
       expect(
         path.decode({ text: 'fo%20o', number: '2', boolean: '0' }),
