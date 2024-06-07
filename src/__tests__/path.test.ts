@@ -105,12 +105,22 @@ describe('#createPath', () => {
 
     describe('#append', () => {
       it('throws if codec has overlapping keys', () => {
-        const path = createPath('/:foo', {
+        const part1 = createPath('/:foo', {
           foo: codec.string,
         });
 
         expect(() => {
-          path.append('/:foo', {
+          part1.append('/:foo', {
+            foo: codec.string,
+          });
+        }).toThrow(new Error('Appended codec collides on :foo'));
+
+        const part2 = part1.append('/:bar', {
+          bar: codec.string,
+        });
+
+        expect(() => {
+          part2.append('/:foo', {
             foo: codec.string,
           });
         }).toThrow(new Error('Appended codec collides on :foo'));
