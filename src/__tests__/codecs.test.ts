@@ -185,5 +185,33 @@ describe('Codecs', () => {
         });
       });
     });
+
+    describe('using mixed', () => {
+      const NONE = {
+        toString() {
+          return '--';
+        },
+      };
+
+      const states = [NONE, 'a', 'b', 1, 2] as const;
+      const state = codecs.oneOf(states);
+
+      it('encodes', () => {
+        expect(state.encode(2)).toStrictEqual('2');
+      });
+
+      describe('decode', () => {
+        it('decodes', () => {
+          expect(state.decode('a')).toBe('a');
+          expect(state.decode('b')).toBe('b');
+          expect(state.decode('1')).toBe(1);
+          expect(state.decode('2')).toBe(2);
+        });
+
+        it('returns first option if no match', () => {
+          expect(state.decode('miss')).toBe(NONE);
+        });
+      });
+    });
   });
 });
