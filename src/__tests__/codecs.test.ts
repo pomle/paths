@@ -43,6 +43,22 @@ describe('Codecs', () => {
     });
   });
 
+  describe('set codec', () => {
+    it('encodes', () => {
+      expect(codecs.set(['a', 'b']).encode('a')).toStrictEqual('a');
+      expect(codecs.set(['a', 'b']).encode(undefined)).toStrictEqual('');
+    });
+
+    it('decodes', () => {
+      expect(codecs.set(['a', 'b']).decode('a')).toStrictEqual('a');
+      expect(codecs.set(['a', 'b']).decode('b')).toStrictEqual('b');
+      expect(codecs.set(['a', 'b']).decode('')).toStrictEqual(undefined);
+      expect(codecs.set(['a', 'b']).decode('no match')).toStrictEqual(
+        undefined,
+      );
+    });
+  });
+
   describe('oneOf codec', () => {
     it('throws if two options has the same string representation', () => {
       expect(() => {
