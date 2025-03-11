@@ -52,7 +52,9 @@ export function createQuery<T extends QueryCodec>(codecs: T): Query<T> {
   function encode(values: Values<T>) {
     const params: Record<string, string[]> = {};
     for (const key of keys) {
-      params[key] = values[key].map(codecs[key].encode);
+      if (Array.isArray(values[key])) {
+        params[key] = values[key].map(codecs[key].encode);
+      }
     }
     return params as Params<T>;
   }
