@@ -34,3 +34,18 @@ export const oneOf = <T extends { toString: () => string }>(
     },
   );
 };
+
+export const set = <T extends string>(valid: readonly T[]) => {
+  const VALID = new Set(valid);
+
+  return createCodec<T | undefined>(
+    (source) => source ?? '',
+    (source: string) => {
+      if (VALID.has(source as T)) {
+        return source as T;
+      }
+
+      return undefined;
+    },
+  );
+};
