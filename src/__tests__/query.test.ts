@@ -60,6 +60,16 @@ describe('#createQuery', () => {
       );
     });
 
+    it('handles explicit undefined gracefully where partials are allowed', () => {
+      expect(
+        query.build({ boolean: [true, false], text: undefined }),
+      ).toStrictEqual('boolean=1&boolean=0');
+
+      expect(query.build({ boolean: [true, false] })).toStrictEqual(
+        'boolean=1&boolean=0',
+      );
+    });
+
     it('creates typed params from URL', () => {
       expect(
         query.parse(
