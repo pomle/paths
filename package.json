@@ -1,6 +1,6 @@
 {
   "name": "@pomle/paths",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "TypeScript library for handling type safe and type rich paths and query params",
   "author": "Pontus Alexander <pontus.alexander@gmail.com>",
   "license": "MIT",
