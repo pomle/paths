@@ -1,4 +1,4 @@
-import { createCodec } from './codec';
+import { createCodec } from "./codec";
 
 export const string = createCodec(
   (value: string) => value,
@@ -11,8 +11,8 @@ export const number = createCodec(
 );
 
 export const boolean = createCodec(
-  (value: boolean) => (value ? '1' : '0'),
-  (text: string) => text === '1',
+  (value: boolean) => (value ? "1" : "0"),
+  (text: string) => text === "1",
 );
 
 export const oneOf = <T extends { toString: () => string }>(

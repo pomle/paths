@@ -24,7 +24,7 @@ export function createParser<Key extends string | number | symbol>(
       }
 
       for (const [index, word] of components.entries()) {
-        if (word[0] !== ':' && word !== parts[index]) {
+        if (word[0] !== ":" && word !== parts[index]) {
           return index - components.length;
         }
       }

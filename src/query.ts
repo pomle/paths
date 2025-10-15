@@ -1,4 +1,4 @@
-import { Codec } from './codec';
+import { Codec } from "./codec";
 
 export function parseQuery(search: string) {
   const params = new URLSearchParams(search);
@@ -22,7 +22,7 @@ export function buildQuery(data: Record<string, string[]>) {
 export type QueryCodec = Record<string, Codec<any>>;
 
 type Values<Codec extends QueryCodec> = {
-  [key in keyof Codec]: ReturnType<Codec[key]['decode']>[];
+  [key in keyof Codec]: ReturnType<Codec[key]["decode"]>[];
 };
 
 type Params<Codec extends QueryCodec> = {

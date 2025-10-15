@@ -9,13 +9,13 @@ A JavaScript and TypeScript lib for handling type rich URLs in web apps.
 Start by defining paths. Paths are usually created once in a single module, then imported for usage.
 
 ```ts
-import { createPath, codecs } from '@pomle/paths';
+import { createPath, codecs } from "@pomle/paths";
 
-const user = createPath('/user/:userId', {
+const user = createPath("/user/:userId", {
   userId: codecs.string,
 });
 
-const userPost = user.append('/posts/:postId', {
+const userPost = user.append("/posts/:postId", {
   postId: codecs.number,
 });
 
@@ -28,10 +28,10 @@ export const paths = {
 Create URLs
 
 ```ts
-import { paths } from './paths';
+import { paths } from "./paths";
 
 const url = paths.userPost.build({
-  userId: 'pomle',
+  userId: "pomle",
   postId: 24,
 });
 
@@ -41,9 +41,9 @@ console.log(url); // Prints "/user/pomle/posts/24"
 Parse path params from URLs
 
 ```ts
-import { paths } from './paths';
+import { paths } from "./paths";
 
-const values = paths.userPost.parse('/user/pomle/posts/24');
+const values = paths.userPost.parse("/user/pomle/posts/24");
 
 console.log(values); // Prints {userId: "pomle", postId: 24}
 ```
@@ -51,23 +51,23 @@ console.log(values); // Prints {userId: "pomle", postId: 24}
 Non-matching or under-matching returns null
 
 ```ts
-import { paths } from './paths';
+import { paths } from "./paths";
 
 // Returns null
-paths.userPost.parse('/not/user/posts');
+paths.userPost.parse("/not/user/posts");
 
 // Returns null
-paths.userPost.parse('/user/pomle');
+paths.userPost.parse("/user/pomle");
 ```
 
 Decode params already parsed
 
 ```ts
-import { paths } from './paths';
+import { paths } from "./paths";
 
 const values = paths.userPost.decode({
-  userId: 'pomle',
-  postId: '24',
+  userId: "pomle",
+  postId: "24",
 });
 
 console.log(values); // Prints {userId: "pomle", postId: 24}
@@ -78,7 +78,7 @@ console.log(values); // Prints {userId: "pomle", postId: 24}
 Define query params
 
 ```ts
-import { createQuery, codecs } from '@pomle/paths';
+import { createQuery, codecs } from "@pomle/paths";
 
 const searchFilter = createQuery({
   username: codecs.string,
@@ -108,7 +108,7 @@ Update query string
 // Location ?username=Pontus+Alexander&range=3&range=5
 
 const qs = searchFilter.build({
-  username: ['Pontus Alexander'],
+  username: ["Pontus Alexander"],
   range: [3, 5],
 });
 
@@ -121,7 +121,7 @@ console.log(qs);
 There are 4 codecs bundled
 
 ```ts
-import { codecs } from '@pomle/paths';
+import { codecs } from "@pomle/paths";
 ```
 
 #### `codecs.string`
@@ -129,7 +129,7 @@ import { codecs } from '@pomle/paths';
 Encodes strings safely
 
 ```ts
-import { createQuery, codecs } from '@pomle/paths';
+import { createQuery, codecs } from "@pomle/paths";
 
 const searchOptions = createQuery({
   query: codecs.string,
@@ -141,7 +141,7 @@ const searchOptions = createQuery({
 Encodes true/false as "0" and "1"
 
 ```ts
-import { createQuery, codecs } from '@pomle/paths';
+import { createQuery, codecs } from "@pomle/paths";
 
 const viewOptions = createQuery({
   showAll: codecs.boolean,
@@ -153,7 +153,7 @@ const viewOptions = createQuery({
 Encodes number safely
 
 ```ts
-import { createQuery, codecs } from '@pomle/paths';
+import { createQuery, codecs } from "@pomle/paths";
 
 const searchOptions = createQuery({
   pageSize: codecs.number,
@@ -166,9 +166,9 @@ const searchOptions = createQuery({
 Ensures values are in a list of known values. If no match is found, first is returned.
 
 ```ts
-import { createQuery, codecs } from '@pomle/paths';
+import { createQuery, codecs } from "@pomle/paths";
 
-const CAR_TYPES = ['sedan', 'hatchback', 'truck'] as const;
+const CAR_TYPES = ["sedan", "hatchback", "truck"] as const;
 
 const carType = codecs.oneOf(CAR_TYPES);
 
@@ -182,8 +182,8 @@ const carOptions = createQuery({
 Do not encode and decode with `encodeURIComponent` or `decodeURIComponent` manually. It will be handled by the library.
 
 ```ts
-import { createPath, createCodec } from '@pomle/paths';
-import { DateTime } from 'luxon';
+import { createPath, createCodec } from "@pomle/paths";
+import { DateTime } from "luxon";
 
 const dateCodec = createCodec<DateTime>(
   (date) => {
@@ -194,7 +194,7 @@ const dateCodec = createCodec<DateTime>(
   },
 );
 
-const bookings = createPath('/bookings/:dayOfArrival', {
+const bookings = createPath("/bookings/:dayOfArrival", {
   dayOfArrival: dateCodec,
 });
 
@@ -227,13 +227,13 @@ The `oneOf` codec can take any object that implements `.toString`.
 ```ts
 const MyTypeOne = {
   toString() {
-    return 'one';
+    return "one";
   },
 };
 
 const MyTypeTwo = {
   toString() {
-    return 'two';
+    return "two";
   },
 };
 
