@@ -1,10 +1,10 @@
-import { createParser } from './parser';
-import { Codec } from './codec';
+import { createParser } from "./parser";
+import { Codec } from "./codec";
 
 export type PathCodec = Record<string, Codec<any>>;
 
 type Values<Codec extends PathCodec> = {
-  [key in keyof Codec]: ReturnType<Codec[key]['decode']>;
+  [key in keyof Codec]: ReturnType<Codec[key]["decode"]>;
 };
 
 type Params<Codec extends PathCodec> = {
@@ -28,7 +28,7 @@ export interface Path<Codec extends PathCodec> {
 
 export function createParts(pathName: string) {
   return pathName
-    .split('/')
+    .split("/")
     .map((part) => part.trim())
     .filter((part) => part.length > 0);
 }
@@ -38,7 +38,7 @@ export function createPath<Codec extends PathCodec>(
   codec: Codec,
 ): Path<Codec> {
   const components = createParts(pathName);
-  pathName = '/' + components.join('/');
+  pathName = "/" + components.join("/");
 
   const keys = Object.keys(codec);
 
@@ -77,7 +77,7 @@ export function createPath<Codec extends PathCodec>(
   function build(params: Values<Codec>) {
     const encoded = encode(params);
     return Object.entries(encoded).reduce((pathName, [key, value]) => {
-      return pathName.replace(':' + key, value);
+      return pathName.replace(":" + key, value);
     }, pathName);
   }
 
@@ -91,7 +91,7 @@ export function createPath<Codec extends PathCodec>(
       }
     }
 
-    return createPath(pathName + '/' + appendixPathName, {
+    return createPath(pathName + "/" + appendixPathName, {
       ...codec,
       ...addCodec,
     });
